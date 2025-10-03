@@ -77,11 +77,11 @@
 
     <div class="slider-container">
       <label>
-        <span>Brightness (LED)</span>
+        <span>Brightness</span>
         <span id="brightnessValue">255</span>
       </label>
       <input id="brightness" type="range" min="20" max="255" value="255" />
-      <small style="color:var(--muted)">Controls LED brightness without changing colors</small>
+      <small style="color:var(--muted)">Dims colors proportionally</small>
     </div>
 
     <label style="display:flex;gap:8px;align-items:center">
@@ -140,34 +140,13 @@
   let device = null, writeChar = null;
   let stream = null, running = false, lastRGB = [0,0,0];
   let inFlight = false, latestBuf = null, usePkt = 1;
-  let lastBrightness = 255;
 
   brightness.addEventListener('input', () => {
-    const val = brightness.value;
-    brightnessValue.textContent = val;
-    if (writeChar) {
-      setBrightness(Number(val));
-    }
+    brightnessValue.textContent = brightness.value;
   });
 
   function pkt56(r,g,b){return new Uint8Array([0x56,r,g,b,0x00,0xF0,0xAA]);}
   function pkt7e(r,g,b){return new Uint8Array([0x7E,0x07,0x05,0x03,r,g,b,0x10,0xEF]);}
-  
-  function setBrightness(level) {
-    if (!writeChar) return;
-    // Triones brightness command - works on many models
-    const cmd = new Uint8Array([0x56, 0x00, 0x00, 0x00, level, 0x0F, 0xAA]);
-    try {
-      if (writeChar.properties.writeWithoutResponse) {
-        writeChar.writeValueWithoutResponse(cmd);
-      } else {
-        writeChar.writeValue(cmd);
-      }
-      lastBrightness = level;
-    } catch(e) {
-      log("Brightness command failed (may not be supported)");
-    }
-  }
 
   async function kickSend(){
     if (inFlight || !writeChar || !latestBuf) return;
@@ -262,9 +241,6 @@
           log("Init failed: " + e2.message);
         }
       }
-      
-      // Set initial brightness
-      setBrightness(Number(brightness.value));
       
       btnPick.disabled = false;
     } catch(e) { 
@@ -375,10 +351,10 @@
           ];
           lastRGB = out;
 
-          // NO brightness scaling - send full color values
-          let r = Math.max(0, Math.min(255, Math.round(out[0])));
-          let g = Math.max(0, Math.min(255, Math.round(out[1])));
-          let b = Math.max(0, Math.min(255, Math.round(out[2])));
+          const scale = Number(brightness.value) / 255;
+          let r = Math.max(0, Math.min(255, Math.round(out[0] * scale)));
+          let g = Math.max(0, Math.min(255, Math.round(out[1] * scale)));
+          let b = Math.max(0, Math.min(255, Math.round(out[2] * scale)));
 
           pctx.drawImage(cnv, 0, 0, preview.width, preview.height);
           
