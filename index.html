@@ -306,16 +306,16 @@
       } 
     }
     
-    const A = acc[maxBin]; 
+const A = acc[maxBin]; 
     let rgb = A[3] > 0 ? [A[0]/A[3], A[1]/A[3], A[2]/A[3]] : [0,0,0];
     
     // BOOST SATURATION - Push colors to vivid versions
-    const [h,s,v] = rgbToHsv(rgb[0], rgb[1], rgb[2]);
+    const [hue2, sat2, val2] = rgbToHsv(rgb[0], rgb[1], rgb[2]);
     
-    const boostedS = Math.min(1.0, s * 1.8);
-    const boostedV = Math.min(1.0, Math.max(0.6, v * 1.2));
+    const boostedS = Math.min(1.0, sat2 * 1.8);
+    const boostedV = Math.min(1.0, Math.max(0.6, val2 * 1.2));
     
-    return hsvToRgb(h, boostedS, boostedV);
+    return hsvToRgb(hue2, boostedS, boostedV);
   }
 
   btnPick.onclick = () => {
