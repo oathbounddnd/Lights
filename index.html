@@ -12,227 +12,106 @@
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,Segoe UI,Roboto,Helvetica,Arial;user-select:none}
   
-  /* Header */
-  header{padding:16px;border-bottom:1px solid #1e293b;background:linear-gradient(135deg,#0d141c,#1a2332);text-align:center;position:relative}
+  header{padding:16px;border-bottom:1px solid #1e293b;background:linear-gradient(135deg,#0d141c,#1a2332);text-align:center}
   h1{margin:0;font-size:22px;font-weight:600;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
   
-  /* Layout */
   main{max-width:900px;margin:0 auto;padding:16px;display:grid;gap:16px}
   .card{background:var(--card);border:1px solid #1e293b;border-radius:16px;padding:16px;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1)}
   .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-  .col{display:flex;flex-direction:column;gap:8px}
   
-  /* Buttons */
-  button{background:#1f2937;border:1px solid #2b3a4c;color:var(--fg);padding:12px 16px;border-radius:12px;cursor:pointer;font-size:16px;font-weight:500;transition:all 0.2s;min-height:48px;position:relative;overflow:hidden}
+  button{background:#1f2937;border:1px solid #2b3a4c;color:var(--fg);padding:12px 16px;border-radius:12px;cursor:pointer;font-size:16px;font-weight:500;transition:all 0.2s;min-height:48px}
   button:hover{background:#223144;transform:translateY(-1px)}
   button:active{transform:scale(0.98)}
   button:disabled{opacity:0.5;cursor:not-allowed}
   button.primary{background:var(--accent);border-color:var(--accent);color:white}
   button.primary:hover{background:#2563eb}
-  button.success{background:var(--success);border-color:var(--success);color:white}
-  button.error{background:var(--error);border-color:var(--error);color:white}
   
-  /* Status pills */
-  .pill{border:1px solid #2a3a4d;color:var(--muted);padding:6px 12px;border-radius:999px;font-size:14px;font-weight:500;transition:all 0.2s}
+  .pill{border:1px solid #2a3a4d;color:var(--muted);padding:6px 12px;border-radius:999px;font-size:14px;font-weight:500}
   .pill.connected{background:var(--success);color:white;border-color:var(--success);animation:pulse 2s infinite}
   .pill.error{background:var(--error);color:white;border-color:var(--error)}
   .pill.scanning{background:var(--accent);color:white;border-color:var(--accent);animation:pulse 1s infinite}
   
-  /* Color elements */
-  .swatch{width:32px;height:32px;border-radius:8px;border:2px solid #333;display:inline-block;transition:all 0.2s}
-  .current-color{display:flex;align-items:center;gap:12px;padding:12px;background:#0a0f16;border-radius:12px;border:1px solid #1e293b}
+  .swatch{width:48px;height:48px;border-radius:8px;border:2px solid #333;display:inline-block}
+  .current-color{display:flex;align-items:center;gap:12px;padding:16px;background:#0a0f16;border-radius:12px;border:1px solid #1e293b;margin:12px 0}
   
-  /* Color picker grid */
-  .color-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(60px,1fr));gap:12px;margin:16px 0}
-  .color-btn{width:100%;height:60px;border-radius:12px;border:3px solid #333;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;font-size:20px;position:relative}
-  .color-btn:hover{transform:scale(1.05);box-shadow:0 4px 12px rgba(0,0,0,0.3)}
-  .color-btn:active{transform:scale(0.95)}
-  .color-btn.selected{border-color:var(--accent);box-shadow:0 0 12px rgba(59,130,246,0.5)}
-  
-  /* Controls */
   .slider-container{margin:12px 0}
-  .slider-container label{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-weight:500}
-  .slider-container input[type="range"]{width:100%;height:8px;border-radius:4px;background:#1e293b;outline:none;-webkit-appearance:none;margin:8px 0}
-  .slider-container input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 2px 4px rgba(0,0,0,0.2)}
+  .slider-container label{display:flex;justify-content:space-between;margin-bottom:8px;font-weight:500}
+  .slider-container input[type="range"]{width:100%;height:8px;border-radius:4px;background:#1e293b;outline:none;-webkit-appearance:none}
+  .slider-container input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:var(--accent);cursor:pointer}
   .slider-container input[type="range"]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:var(--accent);cursor:pointer;border:none}
   
-  /* Screen capture preview */
-  .preview-container{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-  #preview{width:160px;height:90px;border:1px solid #333;border-radius:10px;background:#000;image-rendering:pixelated}
-  #livePreview{width:160px;height:90px;border:1px solid #333;border-radius:10px;background:#000}
+  .preview-container{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:12px 0}
+  #preview,#livePreview{width:160px;height:90px;border:1px solid #333;border-radius:10px;background:#000}
   
-  /* Effects */
-  .effects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-top:16px}
-  .effect-btn{background:linear-gradient(135deg,#1f2937,#374151);border:1px solid #4b5563;padding:16px;text-align:center;border-radius:12px;cursor:pointer;transition:all 0.2s}
-  .effect-btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.2)}
-  .effect-btn.active{background:linear-gradient(135deg,var(--accent),#2563eb);border-color:var(--accent)}
-  .effect-btn .icon{font-size:24px;margin-bottom:8px}
-  .effect-btn .label{font-size:14px;font-weight:500}
+  .log{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;background:#0a0f16;border:1px solid #1e293b;border-radius:12px;max-height:200px;overflow:auto;padding:12px;white-space:pre-wrap}
   
-  /* Log */
-  .log{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;background:#0a0f16;border:1px solid #1e293b;border-radius:12px;max-height:200px;overflow:auto;padding:12px;white-space:pre-wrap;line-height:1.4}
-  
-  /* Animations */
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.7}}
-  @keyframes glow{0%,100%{box-shadow:0 0 5px rgba(59,130,246,0.3)}50%{box-shadow:0 0 20px rgba(59,130,246,0.6)}}
   
-  /* Mobile optimizations */
   @media (max-width: 768px) {
     main{padding:12px}
-    .color-grid{grid-template-columns:repeat(5,1fr)}
-    .preview-container{justify-content:center}
     #preview,#livePreview{width:140px;height:78px}
-    .effects-grid{grid-template-columns:repeat(2,1fr)}
   }
-  
-  @media (max-width: 480px) {
-    .color-grid{grid-template-columns:repeat(4,1fr)}
-    .effects-grid{grid-template-columns:1fr}
-  }
-  
-  /* Additional styles for new features */
-  .connection-status{display:flex;align-items:center;gap:8px;margin:12px 0}
-  .status-dot{width:12px;height:12px;border-radius:50%;background:var(--muted)}
-  .status-dot.connected{background:var(--success);animation:pulse 2s infinite}
-  .status-dot.error{background:var(--error)}
-  
-  .quick-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-  .quick-actions button{flex:1;min-width:80px}
-  
-  label small{color:var(--muted);font-size:12px}
 </style>
 </head>
 <body>
 <header>
   <h1>Triones ScreenSync</h1>
-  <div class="connection-status">
-    <div id="statusDot" class="status-dot"></div>
-    <span id="connectionText">Ready to connect</span>
-  </div>
 </header>
 
 <main>
-  <!-- Connection & Screen Capture -->
   <section class="card">
     <div class="row">
-      <button id="btnInstall" hidden class="primary">📱 Install App</button>
-      <button id="btnConnect" class="primary">🔗 Connect Lights</button>
-      <button id="btnPick" disabled>📺 Pick Screen</button>
+      <button id="btnConnect" class="primary">Connect Lights</button>
+      <button id="btnPick" disabled>Pick Screen</button>
       <span id="btState" class="pill">Not connected</span>
       <span id="capState" class="pill">No capture</span>
     </div>
 
     <div class="current-color">
       <span id="swatch" class="swatch" style="background:#000"></span>
-      <div class="col">
-        <span id="rgbTxt">rgb(0,0,0)</span>
-        <small>Current color</small>
-      </div>
-      <div style="margin-left:auto">
-        <span id="brightnessDisplay">220</span>
-        <small style="display:block">Brightness</small>
+      <div>
+        <div id="rgbTxt" style="font-size:18px;font-weight:500">rgb(0,0,0)</div>
+        <small style="color:var(--muted)">Current color</small>
       </div>
     </div>
 
     <div class="slider-container">
       <label>
-        <span>🔆 Brightness</span>
+        <span>Brightness</span>
         <span id="brightnessValue">220</span>
       </label>
       <input id="brightness" type="range" min="5" max="255" value="220" />
     </div>
 
-    <label class="row" style="gap:8px;">
+    <label style="display:flex;gap:8px;align-items:center">
       <input id="avoidWhite" type="checkbox" checked />
-      Avoid whites <small>(prevents harsh flashes)</small>
+      <span>Avoid whites <small style="color:var(--muted)">(focus on colorful areas)</small></span>
     </label>
 
     <div class="preview-container">
-      <canvas id="preview" width="160" height="90"></canvas>
-      <video id="livePreview" autoplay playsinline muted width="160" height="90"></video>
-    </div>
-  </section>
-
-  <!-- Quick Colors -->
-  <section class="card">
-    <h3 style="margin:0 0 12px 0">🎨 Quick Colors</h3>
-    <div class="color-grid">
-      <button class="color-btn" style="background:#ff0000" data-color="255,0,0">❤️</button>
-      <button class="color-btn" style="background:#00ff00" data-color="0,255,0">💚</button>
-      <button class="color-btn" style="background:#0000ff" data-color="0,0,255">💙</button>
-      <button class="color-btn" style="background:#ffff00" data-color="255,255,0">💛</button>
-      <button class="color-btn" style="background:#ff00ff" data-color="255,0,255">💖</button>
-      <button class="color-btn" style="background:#00ffff" data-color="0,255,255">🩵</button>
-      <button class="color-btn" style="background:#ff8000" data-color="255,128,0">🧡</button>
-      <button class="color-btn" style="background:#8000ff" data-color="128,0,255">💜</button>
-      <button class="color-btn" style="background:#ffffff;color:#000" data-color="255,255,255">🤍</button>
-      <button class="color-btn" style="background:#000000" data-color="0,0,0">⚫</button>
-    </div>
-
-    <div class="quick-actions">
-      <button id="testRed" class="error">Test Red</button>
-      <button id="testGreen" class="success">Test Green</button>
-      <button id="testBlue" style="background:#0066cc;border-color:#0066cc;color:white">Test Blue</button>
-    </div>
-  </section>
-
-  <!-- Effects -->
-  <section class="card">
-    <h3 style="margin:0 0 12px 0">✨ Light Effects</h3>
-    <div class="effects-grid">
-      <div id="effectRainbow" class="effect-btn">
-        <div class="icon">🌈</div>
-        <div class="label">Rainbow</div>
+      <div>
+        <small style="color:var(--muted)">Analyzed</small>
+        <canvas id="preview" width="160" height="90"></canvas>
       </div>
-      <div id="effectPulse" class="effect-btn">
-        <div class="icon">💓</div>
-        <div class="label">Pulse</div>
-      </div>
-      <div id="effectStrobe" class="effect-btn">
-        <div class="icon">⚡</div>
-        <div class="label">Strobe</div>
-      </div>
-      <div id="effectStop" class="effect-btn">
-        <div class="icon">⏹️</div>
-        <div class="label">Stop</div>
+      <div>
+        <small style="color:var(--muted)">Live preview</small>
+        <video id="livePreview" autoplay playsinline muted width="160" height="90"></video>
       </div>
     </div>
   </section>
 
-  <!-- Log -->
   <section class="card">
     <details>
-      <summary style="cursor:pointer;font-weight:500;padding:4px 0">📋 Connection Log</summary>
-      <div id="log" class="log" aria-live="polite"></div>
+      <summary style="cursor:pointer;font-weight:500;padding:4px 0">Connection Log</summary>
+      <div id="log" class="log"></div>
     </details>
   </section>
 
-  <!-- Hidden working elements -->
   <video id="vid" autoplay playsinline muted style="display:none"></video>
   <canvas id="cnv" width="96" height="54" style="display:none"></canvas>
 </main>
 
 <script>
-/* PWA install prompt */
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault(); 
-  deferredPrompt = e;
-  const btn = document.querySelector('#btnInstall');
-  btn.hidden = false;
-  btn.onclick = async () => { 
-    btn.hidden = true; 
-    deferredPrompt.prompt(); 
-    deferredPrompt = null; 
-  };
-});
-
-/* Service worker (offline) */
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(()=>{});
-}
-
-/* Enhanced app code */
 (() => {
   const $ = s => document.querySelector(s);
   const log = m => { 
@@ -240,10 +119,8 @@ if ('serviceWorker' in navigator) {
     const t = new Date().toLocaleTimeString(); 
     el.textContent += `[${t}] ${m}\n`; 
     el.scrollTop = el.scrollHeight; 
-    console.log(m);
   };
 
-  // UI elements
   const btnConnect = $("#btnConnect");
   const btnPick = $("#btnPick");
   const btState = $("#btState");
@@ -251,88 +128,59 @@ if ('serviceWorker' in navigator) {
   const avoidWhite = $("#avoidWhite");
   const brightness = $("#brightness");
   const brightnessValue = $("#brightnessValue");
-  const brightnessDisplay = $("#brightnessDisplay");
   const swatch = $("#swatch");
   const rgbTxt = $("#rgbTxt");
-  const statusDot = $("#statusDot");
-  const connectionText = $("#connectionText");
   const vid = $("#vid");
   const cnv = $("#cnv");
   const preview = $("#preview");
   const pctx = preview.getContext("2d");
   const livePreview = $("#livePreview");
 
-  // State
-  let device = null, server = null, writeChar = null;
-  let stream = null, running = false, lastRGB = [0,0,0], whiteHoldUntil = 0;
-  let currentEffect = null;
+  let device = null, writeChar = null;
+  let stream = null, running = false, lastRGB = [0,0,0];
+  let inFlight = false, latestBuf = null, usePkt = 1;
 
-  // Update brightness display
-  brightness.addEventListener('input', () => {
-    const val = brightness.value;
-    brightnessValue.textContent = val;
-    brightnessDisplay.textContent = val;
-  });
+  brightness.addEventListener('input', () => brightnessValue.textContent = brightness.value);
 
-  // Update connection status
-  function updateConnectionStatus(status, message) {
-    statusDot.className = `status-dot ${status}`;
-    connectionText.textContent = message;
-  }
-
-  // Packet formats
   function pkt56(r,g,b){return new Uint8Array([0x56,r,g,b,0x00,0xF0,0xAA]);}
   function pkt7e(r,g,b){return new Uint8Array([0x7E,0x07,0x05,0x03,r,g,b,0x10,0xEF]);}
-
-  // Enhanced sender with better error handling
-  let inFlight = false, latestBuf = null, lastSentAt = 0;
-  let usePkt = 1;
 
   async function kickSend(){
     if (inFlight || !writeChar || !latestBuf) return;
     inFlight = true;
     const buf = latestBuf; 
     latestBuf = null;
-    
     try {
       if (writeChar.properties.writeWithoutResponse) {
         await writeChar.writeValueWithoutResponse(buf);
       } else {
         await writeChar.writeValue(buf);
       }
-      lastSentAt = performance.now();
     } catch(e) {
       log("Write failed: " + e.message);
-      updateConnectionStatus('error', 'Connection lost');
     } finally {
       inFlight = false;
       if (latestBuf) kickSend();
     }
   }
 
-  function sendRGBfast(r,g,b){
-    const buf = (usePkt===1) ? pkt56(r,g,b) : pkt7e(r,g,b);
-    latestBuf = buf;
+  function sendRGB(r,g,b){
+    latestBuf = (usePkt===1) ? pkt56(r,g,b) : pkt7e(r,g,b);
     kickSend();
   }
 
-  // Common Triones/HappyLighting UUIDs
   const UUIDS = [
     {s:"0000ffd5-0000-1000-8000-00805f9b34fb", c:"0000ffd9-0000-1000-8000-00805f9b34fb"},
     {s:"0000ffe5-0000-1000-8000-00805f9b34fb", c:"0000ffe9-0000-1000-8000-00805f9b34fb"},
     {s:"0000ffb0-0000-1000-8000-00805f9b34fb", c:"0000ffb2-0000-1000-8000-00805f9b34fb"},
-    {s:"0000ffd0-0000-1000-8000-00805f9b34fb", c:"0000ffd2-0000-1000-8000-00805f9b34fb"},
-    {s:"0000ffe0-0000-1000-8000-00805f9b34fb", c:"0000ffe1-0000-1000-8000-00805f9b34fb"},
-    {s:"0000ae00-0000-1000-8000-00805f9b34fb", c:"0000ae01-0000-1000-8000-00805f9b34fb"},
   ];
 
-  async function connectBluetooth(){
+  btnConnect.onclick = async () => {
     try{
       btState.textContent = "Scanning...";
       btState.className = "pill scanning";
-      updateConnectionStatus('', 'Scanning for devices...');
       
-      const deviceRequestOpts = {
+      device = await navigator.bluetooth.requestDevice({
         filters:[
           { namePrefix:"Triones" },
           { namePrefix:"LEDBLE" }, 
@@ -340,27 +188,21 @@ if ('serviceWorker' in navigator) {
           { namePrefix:"ELK-BLEDOM" }
         ],
         optionalServices: UUIDS.map(u=>u.s)
-      };
+      }).catch(() => navigator.bluetooth.requestDevice({
+        acceptAllDevices:true, 
+        optionalServices:UUIDS.map(u=>u.s)
+      }));
       
-      device = await navigator.bluetooth.requestDevice(deviceRequestOpts).catch(async ()=>{
-        return await navigator.bluetooth.requestDevice({
-          acceptAllDevices:true, 
-          optionalServices:UUIDS.map(u=>u.s)
-        });
-      });
-      
-      log(`Selected device: ${device.name||"(unnamed)"}`);
-      updateConnectionStatus('', `Connecting to ${device.name}...`);
+      log(`Connecting to: ${device.name || "(unnamed)"}`);
       
       device.addEventListener("gattserverdisconnected", ()=>{ 
         writeChar = null; 
         btState.textContent = "Disconnected"; 
         btState.className = "pill error";
-        updateConnectionStatus('error', 'Disconnected');
-        log("Bluetooth disconnected"); 
+        log("Disconnected"); 
       });
       
-      server = await device.gatt.connect();
+      const server = await device.gatt.connect();
 
       for (const u of UUIDS){
         try{
@@ -373,46 +215,38 @@ if ('serviceWorker' in navigator) {
         }catch(e){}
       }
       
-      if(!writeChar) throw new Error("No writable characteristic found.");
+      if(!writeChar) throw new Error("No writable characteristic found");
       
       btState.textContent = "Connected";
       btState.className = "pill connected";
-      updateConnectionStatus('connected', `Connected to ${device.name}`);
+      log("Connected successfully");
       
-      // Test connection
       try {
-        if (writeChar.properties.writeWithoutResponse) {
-          await writeChar.writeValueWithoutResponse(pkt56(2,2,2));
-        } else {
-          await writeChar.writeValue(pkt56(2,2,2));
-        }
+        await (writeChar.properties.writeWithoutResponse ? 
+          writeChar.writeValueWithoutResponse(pkt56(2,2,2)) : 
+          writeChar.writeValue(pkt56(2,2,2)));
         usePkt = 1;
-        log("Using 0x56 packet format.");
+        log("Using 0x56 format");
       } catch (_) {
         try {
-          if (writeChar.properties.writeWithoutResponse) {
-            await writeChar.writeValueWithoutResponse(pkt7e(2,2,2));
-          } else {
-            await writeChar.writeValue(pkt7e(2,2,2));
-          }
+          await (writeChar.properties.writeWithoutResponse ? 
+            writeChar.writeValueWithoutResponse(pkt7e(2,2,2)) : 
+            writeChar.writeValue(pkt7e(2,2,2)));
           usePkt = 2;
-          log("Using 0x7E packet format.");
+          log("Using 0x7E format");
         } catch (e2) {
-          log("Init write failed on both formats: " + e2.message);
+          log("Init failed: " + e2.message);
         }
       }
       
       btnPick.disabled = false;
-
     } catch(e) { 
       btState.textContent = "Error"; 
       btState.className = "pill error";
-      updateConnectionStatus('error', 'Connection failed');
-      log("Bluetooth error: " + e.message); 
+      log("Error: " + e.message); 
     }
-  }
+  };
 
-  /* Screen capture + colour analysis (enhanced) */
   function rgbToHsv(r,g,b){
     r/=255; g/=255; b/=255;
     const max=Math.max(r,g,b), min=Math.min(r,g,b), d=max-min; 
@@ -431,144 +265,120 @@ if ('serviceWorker' in navigator) {
     return [h,s,v];
   }
 
-  function sampleDominant(ctx, w, h, avoid){
+  function getDominantColor(ctx, w, h, avoidWhites){
     const sw=64, sh=Math.max(36, Math.round(sw*h/Math.max(w,1)));
     cnv.width=sw; cnv.height=sh;
     ctx.drawImage(vid, 0, 0, sw, sh); 
     const {data}=ctx.getImageData(0,0,sw,sh);
-    const bins=36, hist=new Array(bins).fill(0), acc=Array.from({length:bins},()=>[0,0,0,0]);
-    let whiteish=0,total=0;
+    
+    const bins=36;
+    const hist=new Array(bins).fill(0);
+    const acc=Array.from({length:bins},()=>[0,0,0,0]);
 
     for(let i=0;i<data.length;i+=4){
-      const r=data[i],g=data[i+1],b=data[i+2],a=data[i+3]; 
-      if(a<250) continue; 
-      total++;
+      const r=data[i], g=data[i+1], b=data[i+2], a=data[i+3]; 
+      if(a<250) continue;
+      
       const [hue,s,v]=rgbToHsv(r,g,b);
-      if(s<0.20 && v>0.90) whiteish++;
-      let wgt = Math.pow(s,2.2)*Math.pow(v,1.2);
-      if(avoid){ 
-        if(s<0.15) wgt*=0.15; 
-        if(v>0.88 && s<0.30) wgt*=0.05; 
+      
+      let weight = Math.pow(s, 2.2) * Math.pow(v, 1.2);
+      
+      if(avoidWhites){ 
+        if(s < 0.15) weight *= 0.1;
+        if(v > 0.88 && s < 0.30) weight *= 0.05;
       }
-      const bin=Math.min(bins-1, Math.floor((hue/360)*bins));
-      hist[bin]+=wgt; 
-      const A=acc[bin]; 
-      A[0]+=r*wgt; A[1]+=g*wgt; A[2]+=b*wgt; A[3]+=wgt;
+      
+      const bin = Math.min(bins-1, Math.floor((hue/360)*bins));
+      hist[bin] += weight; 
+      acc[bin][0] += r*weight;
+      acc[bin][1] += g*weight;
+      acc[bin][2] += b*weight;
+      acc[bin][3] += weight;
     }
 
-    const whiteRatio = total? whiteish/total : 0;
-    const now = performance.now();
-    const flash = whiteRatio>0.60; 
-    if(flash) whiteHoldUntil = now+250;
-
-    let rgb;
-    if(!avoid || flash || now<whiteHoldUntil){
-      let R=0,G=0,B=0,C=0; 
-      for(let i=0;i<bins;i++){ 
-        R+=acc[i][0]; G+=acc[i][1]; B+=acc[i][2]; C+=acc[i][3]; 
-      }
-      rgb = C>0 ? [R/C,G/C,B/C] : [0,0,0];
-    } else {
-      let bi=0,bv=-1; 
-      for(let i=0;i<bins;i++){ 
-        if(hist[i]>bv){bv=hist[i];bi=i;} 
-      }
-      const A=acc[bi]; 
-      rgb = A[3]>0 ? [A[0]/A[3],A[1]/A[3],A[2]/A[3]] : [0,0,0];
+    let maxBin=0, maxVal=-1; 
+    for(let i=0;i<bins;i++){ 
+      if(hist[i] > maxVal){
+        maxVal = hist[i];
+        maxBin = i;
+      } 
     }
-    return rgb;
+    
+    const A = acc[maxBin]; 
+    return A[3] > 0 ? [A[0]/A[3], A[1]/A[3], A[2]/A[3]] : [0,0,0];
   }
 
-  function startCapture(){
-    const tryOnce = (constraints) => navigator.mediaDevices.getDisplayMedia(constraints).then(s=>{
+  btnPick.onclick = () => {
+    navigator.mediaDevices.getDisplayMedia({ 
+      video: { frameRate: { ideal: 30, max: 60 } }, 
+      audio: false 
+    }).then(s => {
       stream = s;
       vid.srcObject = stream;
-      vid.muted = true;
-      vid.play().catch(()=>{});
+      vid.play();
       livePreview.srcObject = stream;
 
       capState.textContent = "Capturing";
       capState.className = "pill connected";
-      log("Screen capture started.");
+      log("Screen capture started");
       
-      stream.getVideoTracks()[0].addEventListener("ended", () => stopCapture(true));
+      stream.getVideoTracks()[0].addEventListener("ended", () => {
+        running = false;
+        capState.textContent = "Ended";
+        capState.className = "pill";
+        log("Capture stopped");
+      });
 
-      const onReady = () => {
-        log(`Capture size: ${vid.videoWidth}x${vid.videoHeight}`);
-        if (!vid.videoWidth || !vid.videoHeight) {
-          log("Retrying with relaxed constraints...");
-          stopCapture(false);
-          tryOnce({ video: { frameRate: { ideal: 15, max: 30 } }, audio: false });
-          return;
-        }
+      const startLoop = () => {
+        log(`Size: ${vid.videoWidth}x${vid.videoHeight}`);
         running = true;
+        
+        const ctx = cnv.getContext("2d", {willReadFrequently:true});
+        
+        const loop = () => { 
+          if(!running || !vid.videoWidth) return;
+          
+          const rgb = getDominantColor(ctx, vid.videoWidth, vid.videoHeight, avoidWhite.checked);
+          
+          const smooth = 0.3;
+          const out = [
+            Math.round(smooth*lastRGB[0] + (1-smooth)*rgb[0]),
+            Math.round(smooth*lastRGB[1] + (1-smooth)*rgb[1]),
+            Math.round(smooth*lastRGB[2] + (1-smooth)*rgb[2])
+          ];
+          lastRGB = out;
+
+          const scale = Number(brightness.value)/255;
+          let r = Math.max(0, Math.min(255, Math.round(out[0]*scale)));
+          let g = Math.max(0, Math.min(255, Math.round(out[1]*scale)));
+          let b = Math.max(0, Math.min(255, Math.round(out[2]*scale)));
+
+          pctx.drawImage(cnv, 0, 0, preview.width, preview.height);
+          
+          swatch.style.background = `rgb(${r},${g},${b})`;
+          rgbTxt.textContent = `rgb(${r},${g},${b})`;
+          
+          if ((r+g+b) < 6) { 
+            r=Math.max(r,2); g=Math.max(g,2); b=Math.max(b,2); 
+          }
+
+          sendRGB(r, g, b);
+          requestAnimationFrame(loop);
+        };
+        
         loop();
       };
       
-      if (vid.readyState >= 2) onReady();
-      else vid.addEventListener("loadedmetadata", onReady, {once:true});
-    });
-
-    tryOnce({ 
-      video:{
-        displaySurface:"monitor", 
-        frameRate:{ ideal:30, max:60 }, 
-        cursor:"never" 
-      }, 
-      audio:false 
-    }).catch(e=>{
+      if (vid.readyState >= 2) startLoop();
+      else vid.addEventListener("loadedmetadata", startLoop, {once:true});
+      
+    }).catch(e => {
       log("Capture error: " + e.message);
-      return tryOnce({ video:true, audio:false }).catch(err=>{
-        log("Fallback capture error: " + err.message);
-        capState.textContent = "No capture";
-        capState.className = "pill error";
-      });
+      capState.textContent = "Error";
+      capState.className = "pill error";
     });
-  }
-
-  function stopCapture(logEnded){
-    running = false;
-    if(stream){ 
-      stream.getTracks().forEach(t=>t.stop()); 
-      stream = null; 
-    }
-    capState.textContent = logEnded ? "Ended" : "Stopped";
-    capState.className = "pill";
-    log("Screen capture stopped.");
-    livePreview.srcObject = null;
-  }
-
-  function loop(){
-    const ctx = cnv.getContext("2d", {willReadFrequently:true});
-    const step = () => { 
-      if(!running || !vid.videoWidth) return;
-      
-      const rgb = sampleDominant(ctx, vid.videoWidth, vid.videoHeight, avoidWhite.checked);
-      const alpha = 0.20;
-      const out = [
-        Math.round(alpha*lastRGB[0] + (1-alpha)*rgb[0]),
-        Math.round(alpha*lastRGB[1] + (1-alpha)*rgb[1]),
-        Math.round(alpha*lastRGB[2] + (1-alpha)*rgb[2])
-      ];
-      lastRGB = out;
-
-      const scale = Number(brightness.value)/255;
-      let r = Math.max(0, Math.min(255, Math.round(out[0]*scale)));
-      let g = Math.max(0, Math.min(255, Math.round(out[1]*scale)));
-      let b = Math.max(0, Math.min(255, Math.round(out[2]*scale)));
-
-      try{ pctx.drawImage(cnv,0,0,preview.width,preview.height); }catch{}
-      
-      updateColorDisplay(r, g, b);
-      
-      if ((r+g+b) < 6) { 
-        r=Math.max(r,2); g=Math.max(g,2); b=Math.max(b,2); 
-      }
-
-      const delta = Math.abs(r - (sendRGBfast._lr||0)) + Math.abs(g - (sendRGBfast._lg||0)) + Math.abs(b - (sendRGBfast._lb||0));
-      const now = performance.now();
-      const minGapMs = 8;
-      
-      if (delta >= 6 && (now - (lastSentAt||0) >= minGapMs)) {
-        sendRGBfast(r,g,b);
-        sendRGBfast._lr = r; sendRGBfast
+  };
+})();
+</script>
+</body>
+</html>
