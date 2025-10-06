@@ -103,9 +103,18 @@
 </main>
 
 <script>
+// Register service worker for PWA install
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').then(() => {
+    console.log('Service Worker registered');
+  }).catch(err => {
+    console.log('Service Worker registration failed:', err);
+  });
+}
+
 (() => {
   const $ = s => document.querySelector(s);
-  const log = m => { 
+  const log = m => {
     const el = $("#log"); 
     const t = new Date().toLocaleTimeString(); 
     el.textContent += `[${t}] ${m}\n`; 
