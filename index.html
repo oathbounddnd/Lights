@@ -69,9 +69,14 @@
       </div>
     </div>
 
-    <label style="display:flex;gap:8px;align-items:center;margin:12px 0">
+<label style="display:flex;gap:8px;align-items:center;margin:12px 0">
       <input id="avoidWhite" type="checkbox" checked />
       <span>Avoid whites <small style="color:var(--muted)">(focus on colorful areas)</small></span>
+    </label>
+
+    <label style="display:flex;gap:8px;align-items:center;margin:12px 0">
+      <input id="foundryMode" type="checkbox" />
+      <span>Foundry VTT Mode <small style="color:var(--muted)">(detect spell effects)</small></span>
     </label>
 
     <div class="preview-container">
@@ -112,6 +117,7 @@
   const btState = $("#btState");
   const capState = $("#capState");
   const avoidWhite = $("#avoidWhite");
+  const foundryMode = $("#foundryMode");
   const swatch = $("#swatch");
   const rgbTxt = $("#rgbTxt");
   const vid = $("#vid");
@@ -120,9 +126,11 @@
   const pctx = preview.getContext("2d");
   const livePreview = $("#livePreview");
 
-  let device = null, writeChar = null;
+ let device = null, writeChar = null;
   let stream = null, running = false, lastRGB = [0,0,0];
   let inFlight = false, latestBuf = null, usePkt = 1;
+  let currentRGB = [0,0,0]; // Current displayed color (what's actually shown)
+  let targetRGB = [0,0,0];  // Target color we're fading toward
 
   function pkt56(r,g,b){return new Uint8Array([0x56,r,g,b,0x00,0xF0,0xAA]);}
   function pkt7e(r,g,b){return new Uint8Array([0x7E,0x07,0x05,0x03,r,g,b,0x10,0xEF]);}
@@ -267,7 +275,7 @@
     ];
   }
 
-  function getDominantColor(ctx, w, h, avoidWhites){
+  function getDominantColor(ctx, w, h, avoidWhites, isFoundry){
     const sw=64, sh=Math.max(36, Math.round(sw*h/Math.max(w,1)));
     cnv.width=sw; cnv.height=sh;
     ctx.drawImage(vid, 0, 0, sw, sh); 
@@ -283,11 +291,22 @@
       
       const [hue,s,v]=rgbToHsv(r,g,b);
       
-      let weight = Math.pow(s, 2.2) * Math.pow(v, 1.2);
+let weight = Math.pow(s, 2.2) * Math.pow(v, 1.2);
       
-      if(avoidWhites){ 
-        if(s < 0.15) weight *= 0.1;
-        if(v > 0.88 && s < 0.30) weight *= 0.05;
+if(isFoundry) {
+        // FOUNDRY VTT MODE: MASSIVELY favor bright, saturated pixels (spell effects)
+        // Even tiny corner effects should dominate the entire background
+        if(s > 0.3 && v > 0.4) {
+          // This is a colorful, bright pixel (likely a spell effect)
+          // Use extreme multiplier so even 20 spell pixels beat 2000 background pixels
+          weight *= Math.pow(s, 3) * Math.pow(v, 4) * 200;
+        }
+      } else if(avoidWhites){ 
+        // Don't penalize VERY bright pixels (lightning flashes), only dim grays/whites
+        if(v < 0.95) {
+          if(s < 0.15) weight *= 0.1;
+          if(v > 0.88 && s < 0.30) weight *= 0.05;
+        }
       }
       
       const bin = Math.min(bins-1, Math.floor((hue/360)*bins));
@@ -309,17 +328,37 @@
 const A = acc[maxBin]; 
     let rgb = A[3] > 0 ? [A[0]/A[3], A[1]/A[3], A[2]/A[3]] : [0,0,0];
     
-    // BOOST SATURATION - Push colors to vivid versions
+    // BOOST SATURATION - But preserve whites and blacks
     const [hue2, sat2, val2] = rgbToHsv(rgb[0], rgb[1], rgb[2]);
     
-    const boostedS = Math.min(1.0, sat2 * 1.8);
-    const boostedV = Math.min(1.0, Math.max(0.6, val2 * 1.2));
+    // Only boost saturation for mid-range colors, preserve whites (high V, low S) and blacks (low V)
+    let boostedS = sat2;
+    let boostedV = val2;
+    
+    if (val2 > 0.85 && sat2 < 0.25) {
+      // This is white/bright - don't boost, keep it white
+      boostedS = sat2;
+      boostedV = val2;
+    } else if (val2 < 0.15) {
+      // This is black/dark - keep it dark
+      boostedS = sat2;
+      boostedV = val2;
+    } else {
+      // Mid-range colors - boost them
+      boostedS = Math.min(1.0, sat2 * 1.6);
+      boostedV = Math.min(1.0, val2 * 1.15);
+    }
     
     return hsvToRgb(hue2, boostedS, boostedV);
   }
 
-  btnPick.onclick = () => {
-    navigator.mediaDevices.getDisplayMedia({ 
+btnPick.onclick = () => {
+    if (stream) {
+      log("Already capturing");
+      return;
+    }
+    
+    navigator.mediaDevices.getDisplayMedia({
       video: { frameRate: { ideal: 30, max: 60 } }, 
       audio: false 
     }).then(s => {
@@ -345,34 +384,56 @@ const A = acc[maxBin];
         
         const ctx = cnv.getContext("2d", {willReadFrequently:true});
         
-        const loop = () => { 
+const loop = () => { 
           if(!running || !vid.videoWidth) return;
           
-          const rgb = getDominantColor(ctx, vid.videoWidth, vid.videoHeight, avoidWhite.checked);
+          const rgb = getDominantColor(ctx, vid.videoWidth, vid.videoHeight, avoidWhite.checked, foundryMode.checked);
           
-          const smooth = 0.3;
-          const out = [
-            Math.round(smooth*lastRGB[0] + (1-smooth)*rgb[0]),
-            Math.round(smooth*lastRGB[1] + (1-smooth)*rgb[1]),
-            Math.round(smooth*lastRGB[2] + (1-smooth)*rgb[2])
+          // Set new target color
+          targetRGB = rgb;
+          
+          // Calculate color change magnitude to detect flashes
+          const deltaR = Math.abs(targetRGB[0] - currentRGB[0]);
+          const deltaG = Math.abs(targetRGB[1] - currentRGB[1]);
+          const deltaB = Math.abs(targetRGB[2] - currentRGB[2]);
+          const totalDelta = deltaR + deltaG + deltaB;
+          
+          // Adaptive fade speed based on change magnitude
+          let fadeSpeed;
+          if (totalDelta > 180) {
+            // FLASH DETECTED: Instant response (lightning, gunfire, explosions)
+            fadeSpeed = 1.0;
+          } else if (totalDelta > 100) {
+            // Rapid change: Very fast fade
+            fadeSpeed = 0.5;
+          } else if (totalDelta > 50) {
+            // Moderate change: Quick fade (scene cuts)
+            fadeSpeed = 0.25;
+          } else {
+            // Gradual change: Smooth slow fade
+            fadeSpeed = 0.12;
+          }
+          
+          // Interpolate current color toward target
+          currentRGB = [
+            currentRGB[0] + (targetRGB[0] - currentRGB[0]) * fadeSpeed,
+            currentRGB[1] + (targetRGB[1] - currentRGB[1]) * fadeSpeed,
+            currentRGB[2] + (targetRGB[2] - currentRGB[2]) * fadeSpeed
           ];
-          lastRGB = out;
+          
+          lastRGB = currentRGB;
 
-          let r = Math.max(0, Math.min(255, Math.round(out[0])));
-          let g = Math.max(0, Math.min(255, Math.round(out[1])));
-          let b = Math.max(0, Math.min(255, Math.round(out[2])));
+          let r = Math.max(0, Math.min(255, Math.round(currentRGB[0])));
+          let g = Math.max(0, Math.min(255, Math.round(currentRGB[1])));
+          let b = Math.max(0, Math.min(255, Math.round(currentRGB[2])));
 
           pctx.drawImage(cnv, 0, 0, preview.width, preview.height);
           
-          swatch.style.background = `rgb(${r},${g},${b})`;
+swatch.style.background = `rgb(${r},${g},${b})`;
           rgbTxt.textContent = `rgb(${r},${g},${b})`;
-          
-          if ((r+g+b) < 6) { 
-            r=Math.max(r,2); g=Math.max(g,2); b=Math.max(b,2); 
-          }
 
-          sendRGB(r, g, b);
-          requestAnimationFrame(loop);
+sendRGB(r, g, b);
+          setTimeout(loop, 33); // ~30fps, continues when minimized
         };
         
         loop();
